@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #191C49;
+  --color-primary-dark: #0f112e;
+  --color-secondary: #406E92;
+  --color-secondary-dark: #2f526d;
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  
+  :root.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+  }
+  
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
+  }
+
+  [dir="rtl"] {
+    font-family: 'Noto Sans Arabic', sans-serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden;
+  }
+  
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary-dark text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 cursor-pointer;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/50 outline-none transition-all;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-200 dark:bg-slate-800 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-300 dark:bg-slate-700;
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
