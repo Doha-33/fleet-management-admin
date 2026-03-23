@@ -130,3 +130,13 @@ export interface Product {
   updatedAt?: string;
   created_at?: string;
 }
+
+export interface FAQ {
+  _id?: string;
+  questionAr: string;
+  questionEn: string;
+  answerAr: string;
+  answerEn: string;
+  createdAt?: string;
+  updatedAt?: string;
+}

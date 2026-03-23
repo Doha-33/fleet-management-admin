@@ -268,6 +268,12 @@ const resources = {
       updated_successfully: 'Updated successfully',
       added_successfully: 'Added successfully',
       deleted_successfully: 'Deleted successfully',
+      failed_to_fetch_faqs: 'Failed to fetch FAQs',
+      faq_updated_successfully: 'FAQ updated successfully',
+      faq_added_successfully: 'FAQ added successfully',
+      failed_to_save_faq: 'Failed to save FAQ',
+      faq_deleted_successfully: 'FAQ deleted successfully',
+      failed_to_delete_faq: 'Failed to delete FAQ',
     }
   },
   ar: {
@@ -535,6 +541,12 @@ const resources = {
       updated_successfully: 'تم التحديث بنجاح',
       added_successfully: 'تمت الإضافة بنجاح',
       deleted_successfully: 'تم الحذف بنجاح',
+      failed_to_fetch_faqs: 'فشل في جلب الأسئلة الشائعة',
+      faq_updated_successfully: 'تم تحديث السؤال بنجاح',
+      faq_added_successfully: 'تم إضافة السؤال بنجاح',
+      failed_to_save_faq: 'فشل في حفظ السؤال',
+      faq_deleted_successfully: 'تم حذف السؤال بنجاح',
+      failed_to_delete_faq: 'فشل في حذف السؤال',
     }
   }
 };
