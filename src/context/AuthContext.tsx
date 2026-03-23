@@ -34,27 +34,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('auth_user', JSON.stringify(userData));
     } catch (error) {
       console.error('Login failed:', error);
-      
-      // Mock login fallback for demo purposes if API fails
-      const isDemoAdmin = email === 'admin@fleettrack.com' && (password === 'admin123' || password === 'admin');
-      const isJohnAdmin = email === 'john@example.com' && (password === 'password123' || password === '123456');
-
-      if (isDemoAdmin || isJohnAdmin) {
-        const mockUser: User = {
-          _id: '69a84af9922b3aaab267505f',
-          nameAr: isJohnAdmin ? 'جون' : 'مدير النظام',
-          nameEn: isJohnAdmin ? 'John' : 'System Admin',
-          email: email,
-          isAdmin: true,
-          status: 'active',
-          image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',
-          token: 'mock-jwt-token'
-        };
-        setUser(mockUser);
-        localStorage.setItem('auth_user', JSON.stringify(mockUser));
-        return;
-      }
-      
       throw error;
     } finally {
       setIsLoading(false);

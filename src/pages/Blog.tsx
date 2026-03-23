@@ -37,40 +37,7 @@ const Blog: React.FC = () => {
       setPosts(response.data);
     } catch (error) {
       console.error('Failed to fetch posts:', error);
-      
-      // Fallback to mock data for demo if API fails
-      const mockPosts: BlogPost[] = [
-        {
-          _id: '1',
-          titleAr: 'مستقبل تتبع الأساطيل في 2024',
-          titleEn: 'The Future of Fleet Tracking in 2024',
-          contentAr: 'هذا محتوى تجريبي للمقالة...',
-          contentEn: 'This is a demo content for the article...',
-          category: 'Technology',
-          status: 'Published',
-          image: 'https://picsum.photos/seed/fleet1/800/400',
-          slug: 'future-of-fleet-tracking',
-          authorName: 'Admin',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          _id: '2',
-          titleAr: 'كيفية تحسين استهلاك الوقود',
-          titleEn: 'How to Optimize Fuel Consumption',
-          contentAr: 'نصائح لتحسين كفاءة الوقود...',
-          contentEn: 'Tips for improving fuel efficiency...',
-          category: 'Efficiency',
-          status: 'Published',
-          image: 'https://picsum.photos/seed/fuel/800/400',
-          slug: 'optimize-fuel-consumption',
-          authorName: 'Admin',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
-      ];
-      setPosts(mockPosts);
-      toast.info('Using demo data (Backend connection failed)');
+      toast.error(t('failed_to_fetch_posts'));
     } finally {
       setIsLoading(false);
     }

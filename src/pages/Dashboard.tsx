@@ -24,15 +24,7 @@ import {
 import { formatDate } from '../utils';
 import { toast } from 'sonner';
 
-const data = [
-  { name: 'Jan', requests: 40, devices: 24 },
-  { name: 'Feb', requests: 30, devices: 13 },
-  { name: 'Mar', requests: 20, devices: 98 },
-  { name: 'Apr', requests: 27, devices: 39 },
-  { name: 'May', requests: 18, devices: 48 },
-  { name: 'Jun', requests: 23, devices: 38 },
-  { name: 'Jul', requests: 34, devices: 43 },
-];
+const data: any[] = [];
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -46,11 +38,13 @@ const Dashboard: React.FC = () => {
   };
 
   const stats = [
-    { label: t('total_devices'), value: '1,284', icon: Cpu, color: 'bg-blue-500', trend: '+12%', up: true },
-    { label: t('total_services'), value: '24', icon: Settings, color: 'bg-orange-500', trend: '+2%', up: true },
-    { label: t('blog_posts'), value: '156', icon: FileText, color: 'bg-emerald-500', trend: '+5%', up: true },
-    { label: t('total_requests'), value: '842', icon: Users, color: 'bg-purple-500', trend: '-3%', up: false },
+    { label: t('total_devices'), value: '0', icon: Cpu, color: 'bg-blue-500', trend: '0%', up: true },
+    { label: t('total_services'), value: '0', icon: Settings, color: 'bg-orange-500', trend: '0%', up: true },
+    { label: t('blog_posts'), value: '0', icon: FileText, color: 'bg-emerald-500', trend: '0%', up: true },
+    { label: t('total_requests'), value: '0', icon: Users, color: 'bg-purple-500', trend: '0%', up: false },
   ];
+
+  const recentActivity: any[] = [];
 
   return (
     <div className="space-y-8">
@@ -121,19 +115,25 @@ const Dashboard: React.FC = () => {
         <div className="card p-4 md:p-6">
           <h3 className="font-bold text-lg mb-6">{t('recent_activity')}</h3>
           <div className="space-y-6">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex gap-3 md:gap-4">
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                  <User size={16} className="text-slate-500 md:w-[18px] md:h-[18px]" />
+            {recentActivity.length > 0 ? (
+              recentActivity.map((activity, i) => (
+                <div key={i} className="flex gap-3 md:gap-4">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                    <User size={16} className="text-slate-500 md:w-[18px] md:h-[18px]" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs md:text-sm break-words">
+                      <span className="font-bold">{activity.user}</span> {activity.action} <span className="font-bold text-primary">{activity.target}</span>
+                    </p>
+                    <p className="text-[10px] md:text-xs text-slate-400 mt-1">{formatDate(activity.date)}</p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs md:text-sm break-words">
-                    <span className="font-bold">{t('admin')}</span> {t('updated_device')} <span className="font-bold text-primary">GPS Tracker X1</span>
-                  </p>
-                  <p className="text-[10px] md:text-xs text-slate-400 mt-1">{formatDate(new Date().toISOString())}</p>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-slate-500 text-sm">
+                {t('no_recent_activity')}
               </div>
-            ))}
+            )}
           </div>
           <button 
             onClick={() => toast.info(t('navigating_to_activity'))}

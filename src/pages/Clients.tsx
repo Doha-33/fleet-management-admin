@@ -28,16 +28,7 @@ const Clients = () => {
       setClients(response.data);
     } catch (error) {
       console.error('Failed to fetch clients:', error);
-      
-      // Fallback to mock data for demo
-      const mockClients: Client[] = [
-        { _id: '1', clientName: 'Aramco', logo: 'https://picsum.photos/seed/aramco/200/200', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-        { _id: '2', clientName: 'SABIC', logo: 'https://picsum.photos/seed/sabic/200/200', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-        { _id: '3', clientName: 'STC', logo: 'https://picsum.photos/seed/stc/200/200', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-        { _id: '4', clientName: 'Maaden', logo: 'https://picsum.photos/seed/maaden/200/200', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-      ];
-      setClients(mockClients);
-      toast.info('Using demo data (Backend connection failed)');
+      toast.error(t('failed_to_fetch_clients'));
     } finally {
       setIsLoading(false);
     }

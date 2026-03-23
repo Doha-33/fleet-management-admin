@@ -17,6 +17,8 @@ import { Toaster } from 'sonner';
 import './i18n/config';
 import { useTranslation } from 'react-i18next';
 
+import ErrorBoundary from './components/ErrorBoundary';
+
 export default function App() {
   const { i18n } = useTranslation();
 
@@ -28,29 +30,31 @@ export default function App() {
   }, [i18n.language]);
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Toaster position="top-right" richColors />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            
-            <Route path="/" element={<DashboardLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="products" element={<Products />} />
-              <Route path="blog" element={<Blog />} />
-              <Route path="clients" element={<Clients />} />
-              <Route path="partnerships" element={<Partnerships />} />
-              <Route path="offers" element={<Offers />} />
-              <Route path="faq" element={<FAQManager />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="profile" element={<Profile />} />
-            </Route>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <Toaster position="top-right" richColors />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              
+              <Route path="/" element={<DashboardLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="products" element={<Products />} />
+                <Route path="blog" element={<Blog />} />
+                <Route path="clients" element={<Clients />} />
+                <Route path="partnerships" element={<Partnerships />} />
+                <Route path="offers" element={<Offers />} />
+                <Route path="faq" element={<FAQManager />} />
+                <Route path="settings" element={<Settings />} />
+                <Route path="profile" element={<Profile />} />
+              </Route>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </ThemeProvider>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
