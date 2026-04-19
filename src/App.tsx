@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard';
 import Blog from './pages/Blog';
 import Profile from './pages/Profile';
 import Products from './pages/Products';
+import Vehicles from './pages/Vehicles';
+import Certificates from './pages/Certificates';
 import FAQManager from './pages/FAQManager';
 import Clients from './pages/Clients';
 import Partnerships from './pages/Partnerships';
@@ -41,6 +43,8 @@ export default function App() {
               <Route path="/" element={<DashboardLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path="products" element={<Products />} />
+                <Route path="vehicles" element={<Vehicles />} />
+                <Route path="certificates" element={<Certificates />} />
                 <Route path="blog" element={<Blog />} />
                 <Route path="clients" element={<Clients />} />
                 <Route path="partnerships" element={<Partnerships />} />

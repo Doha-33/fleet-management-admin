@@ -70,9 +70,6 @@ const Login: React.FC = () => {
                 placeholder="••••••••"
               />
             </div>
-            <p className="mt-2 text-[10px] text-slate-400 text-center">
-              Demo: admin@fleettrack.com / admin123
-            </p>
           </div>
 
           <button

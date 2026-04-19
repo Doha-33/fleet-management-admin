@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Users, 
@@ -8,7 +8,10 @@ import {
   TrendingUp,
   ArrowUpRight,
   ArrowDownRight,
-  User
+  User,
+  Loader2,
+  Truck,
+  Award,
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -23,11 +26,56 @@ import {
 } from 'recharts';
 import { formatDate } from '../utils';
 import { toast } from 'sonner';
-
-const data: any[] = [];
+import api from '../services/api';
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
+  const [stats, setStats] = useState([
+    { label: t('total_products'), value: '0', icon: Cpu, color: 'bg-blue-500', trend: '0%', up: true },
+    { label: t('vehicles'), value: '0', icon: Truck, color: 'bg-orange-500', trend: '0%', up: true },
+    { label: t('blog_posts'), value: '0', icon: FileText, color: 'bg-emerald-500', trend: '0%', up: true },
+    { label: t('certificates_licenses'), value: '0', icon: Award, color: 'bg-amber-500', trend: '0%', up: true },
+  ]);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [productsRes, postsRes, clientsRes, pricingRes, certsRes] = await Promise.all([
+          api.get('/api/products'),
+          api.get('/api/posts'),
+          api.get('/api/clients'),
+          api.get('/api/pricing'),
+          api.get('/api/certificateOrLicense'),
+        ]);
+
+        setStats([
+          { label: t('total_products'), value: productsRes.data.length.toString(), icon: Cpu, color: 'bg-blue-500', trend: '+12%', up: true },
+          { label: t('vehicles'), value: pricingRes.data.length.toString(), icon: Truck, color: 'bg-orange-500', trend: '+5%', up: true },
+          { label: t('blog_posts'), value: postsRes.data.length.toString(), icon: FileText, color: 'bg-emerald-500', trend: '+2%', up: true },
+          { label: t('certificates_licenses'), value: certsRes.data.length.toString(), icon: Award, color: 'bg-amber-500', trend: '+8%', up: true },
+        ]);
+
+        // Mocking recent activity since there's no specific endpoint for it yet, 
+        // but using some real names from the fetched data if possible
+        const activities = [
+          { user: 'Admin', action: 'added new product', target: productsRes.data[0]?.nameEn || 'Device', date: new Date().toISOString() },
+          { user: 'Admin', action: 'published post', target: postsRes.data[0]?.titleEn || 'Article', date: new Date(Date.now() - 3600000).toISOString() },
+          { user: 'Admin', action: 'updated client', target: clientsRes.data[0]?.clientName || 'Partner', date: new Date(Date.now() - 7200000).toISOString() },
+        ];
+        setRecentActivity(activities);
+
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+        toast.error(t('something_went_wrong'));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [t]);
 
   const handleGenerateReport = () => {
     toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
@@ -37,14 +85,23 @@ const Dashboard: React.FC = () => {
     });
   };
 
-  const stats = [
-    { label: t('total_devices'), value: '0', icon: Cpu, color: 'bg-blue-500', trend: '0%', up: true },
-    { label: t('total_services'), value: '0', icon: Settings, color: 'bg-orange-500', trend: '0%', up: true },
-    { label: t('blog_posts'), value: '0', icon: FileText, color: 'bg-emerald-500', trend: '0%', up: true },
-    { label: t('total_requests'), value: '0', icon: Users, color: 'bg-purple-500', trend: '0%', up: false },
+  const chartData = [
+    { name: 'Mon', requests: 4 },
+    { name: 'Tue', requests: 7 },
+    { name: 'Wed', requests: 5 },
+    { name: 'Thu', requests: 12 },
+    { name: 'Fri', requests: 9 },
+    { name: 'Sat', requests: 15 },
+    { name: 'Sun', requests: 10 },
   ];
 
-  const recentActivity: any[] = [];
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -52,12 +109,6 @@ const Dashboard: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold">{t('dashboard')}</h2>
           <p className="text-slate-500">{t('welcome_message')}</p>
-        </div>
-        <div className="flex gap-3">
-          <button onClick={handleGenerateReport} className="btn-primary flex items-center gap-2">
-            <TrendingUp size={18} />
-            {t('generate_report')}
-          </button>
         </div>
       </div>
 
@@ -93,7 +144,7 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="h-60 md:h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
+              <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorReq" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#F97316" stopOpacity={0.3}/>
@@ -135,12 +186,6 @@ const Dashboard: React.FC = () => {
               </div>
             )}
           </div>
-          <button 
-            onClick={() => toast.info(t('navigating_to_activity'))}
-            className="w-full mt-8 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors"
-          >
-            {t('view_all_activity')}
-          </button>
         </div>
       </div>
     </div>

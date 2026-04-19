@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, Edit2, Trash2, Calendar, Tag, User, Save, Camera } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Calendar, User, Save, Camera, AlertTriangle } from 'lucide-react';
 import { BlogPost } from '../types';
 import { cn, formatDate, generateSlug } from '../utils';
 import Modal from '../components/Modal';
@@ -15,8 +15,10 @@ const Blog: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Modal State
+  // Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [postToDelete, setPostToDelete] = useState<BlogPost | null>(null);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [formData, setFormData] = useState<Partial<BlogPost>>({
     titleAr: '',
@@ -78,6 +80,26 @@ const Blog: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleDeleteClick = (post: BlogPost) => {
+    setPostToDelete(post);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (postToDelete) {
+      try {
+        await api.delete(`/api/posts/${postToDelete._id}`);
+        toast.success(t('post_deleted_successfully'));
+        fetchPosts();
+        setIsDeleteModalOpen(false);
+        setPostToDelete(null);
+      } catch (error) {
+        console.error('Failed to delete post:', error);
+        toast.error(t('failed_to_delete_post'));
+      }
+    }
+  };
+
   const handleSave = async () => {
     if (!formData.titleAr || !formData.category) {
       toast.error(t('please_fill_all_fields'));
@@ -102,19 +124,6 @@ const Blog: React.FC = () => {
     } catch (error) {
       console.error('Failed to save post:', error);
       toast.error(t('failed_to_save_post'));
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (window.confirm(t('delete_confirmation'))) {
-      try {
-        await api.delete(`/api/posts/${id}`);
-        toast.success(t('post_deleted_successfully'));
-        fetchPosts();
-      } catch (error) {
-        console.error('Failed to delete post:', error);
-        toast.error(t('failed_to_delete_post'));
-      }
     }
   };
 
@@ -217,7 +226,7 @@ const Blog: React.FC = () => {
                     <button onClick={() => handleOpenModal(post)} className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 rounded-lg transition-colors" title={t('edit')}>
                       <Edit2 size={16} />
                     </button>
-                    <button onClick={() => handleDelete(post._id)} className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 rounded-lg transition-colors" title={t('delete')}>
+                    <button onClick={() => handleDeleteClick(post)} className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 rounded-lg transition-colors" title={t('delete')}>
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -228,18 +237,19 @@ const Blog: React.FC = () => {
         </div>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingPost ? t('edit_post') : t('create_post')}>
-        <div className="space-y-4 max-h-[80vh] overflow-y-auto p-1">
-          <div className="flex justify-center mb-4">
+      {/* Create/Edit Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingPost ? t('edit_post') : t('create_post')} size="lg">
+        <div className="space-y-5">
+          <div className="flex justify-center mb-2">
             <div className="relative group">
               <img 
                 src={formData.image || 'https://via.placeholder.com/150'} 
                 alt="Preview" 
-                className="w-32 h-20 rounded-xl object-cover border-2 border-slate-200 dark:border-slate-800"
+                className="w-40 h-24 rounded-xl object-cover border-2 border-slate-200 dark:border-slate-700 shadow-md"
                 referrerPolicy="no-referrer"
               />
-              <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 rounded-xl cursor-pointer transition-opacity">
-                <Camera size={20} />
+              <label className="absolute inset-0 flex items-center justify-center bg-black/60 text-white opacity-0 group-hover:opacity-100 rounded-xl cursor-pointer transition-all duration-200 backdrop-blur-sm">
+                <Camera size={22} />
                 <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
               </label>
             </div>
@@ -247,83 +257,148 @@ const Blog: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">{t('title_ar')}</label>
+              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                {t('title_ar')} <span className="text-red-500">*</span>
+              </label>
               <input 
                 type="text" 
-                className="input-field" 
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
                 value={formData.titleAr}
                 onChange={e => setFormData({ ...formData, titleAr: e.target.value })}
+                placeholder={t('enter_title_ar')}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">{t('title_en')}</label>
+              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                {t('title_en')} <span className="text-red-500">*</span>
+              </label>
               <input 
                 type="text" 
-                className="input-field" 
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
                 value={formData.titleEn}
                 onChange={e => setFormData({ ...formData, titleEn: e.target.value })}
+                placeholder={t('enter_title_en')}
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">{t('category')}</label>
+              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                {t('category')} <span className="text-red-500">*</span>
+              </label>
               <input 
                 type="text" 
-                className="input-field" 
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
                 value={formData.category}
                 onChange={e => setFormData({ ...formData, category: e.target.value })}
+                placeholder={t('enter_category')}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">{t('status')}</label>
+              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                {t('status')}
+              </label>
               <select 
-                className="input-field"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all cursor-pointer"
                 value={formData.status}
                 onChange={e => setFormData({ ...formData, status: e.target.value })}
               >
-                <option value="Draft">{t('draft')}</option>
-                <option value="Published">{t('published')}</option>
+                <option value="Draft">📄 {t('draft')}</option>
+                <option value="Published">✅ {t('published')}</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">{t('author_name')}</label>
+            <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+              {t('author_name')}
+            </label>
             <input 
               type="text" 
-              className="input-field" 
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
               value={formData.authorName}
               onChange={e => setFormData({ ...formData, authorName: e.target.value })}
+              placeholder={t('enter_author_name')}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">{t('content_ar')}</label>
+            <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+              {t('content_ar')} <span className="text-red-500">*</span>
+            </label>
             <textarea 
-              className="input-field h-32" 
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-y min-h-[120px]" 
               value={formData.contentAr}
               onChange={e => setFormData({ ...formData, contentAr: e.target.value })}
+              placeholder={t('enter_content_ar')}
+              dir="rtl"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">{t('content_en')}</label>
+            <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+              {t('content_en')} <span className="text-red-500">*</span>
+            </label>
             <textarea 
-              className="input-field h-32" 
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-y min-h-[120px]" 
               value={formData.contentEn}
               onChange={e => setFormData({ ...formData, contentEn: e.target.value })}
+              placeholder={t('enter_content_en')}
             />
           </div>
 
-          <div className="flex gap-3 pt-4">
-            <button onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg font-medium">
+          <div className="flex gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+            <button onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
               {t('cancel')}
             </button>
-            <button onClick={handleSave} className="flex-1 btn-primary flex items-center justify-center gap-2">
+            <button onClick={handleSave} className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md">
               <Save size={18} />
               {t('save')}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} title={t('delete_post')} size="sm">
+        <div className="text-center py-4">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+            <AlertTriangle size={32} className="text-red-600" />
+          </div>
+          
+          <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
+            {t('delete_confirmation_title') || 'Delete Post?'}
+          </h3>
+          
+          <p className="text-slate-500 dark:text-slate-400 mb-6">
+            {t('delete_confirmation_message') || 'Are you sure you want to delete this post? This action cannot be undone.'}
+          </p>
+          
+          {postToDelete && (
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 mb-6 text-left">
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                <span className="font-bold">{t('title')}:</span> {isRtl ? postToDelete.titleAr : postToDelete.titleEn}
+              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                <span className="font-bold">{t('category')}:</span> {postToDelete.category}
+              </p>
+            </div>
+          )}
+          
+          <div className="flex gap-3">
+            <button
+              onClick={() => setIsDeleteModalOpen(false)}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+            >
+              {t('cancel')}
+            </button>
+            <button
+              onClick={handleConfirmDelete}
+              className="flex-1 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-all flex items-center justify-center gap-2 shadow-md"
+            >
+              <Trash2 size={18} />
+              {t('delete')}
             </button>
           </div>
         </div>
@@ -333,4 +408,3 @@ const Blog: React.FC = () => {
 };
 
 export default Blog;
-

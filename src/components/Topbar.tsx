@@ -10,7 +10,7 @@ interface TopbarProps {
 }
 
 const Topbar: React.FC<TopbarProps> = ({ onMenuClick }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -72,13 +72,15 @@ const Topbar: React.FC<TopbarProps> = ({ onMenuClick }) => {
 
         <div className="flex items-center gap-3">
           <div className="text-right rtl:text-left hidden sm:block">
-            <p className="text-sm font-bold">{user?.name}</p>
-            <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
+            <p className="text-sm font-bold">
+              {i18n.language === 'ar' ? user?.nameAr : user?.nameEn}
+            </p>
+            <p className="text-xs text-slate-500 capitalize">{user?.isAdmin ? t('admin') : t('user')}</p>
           </div>
           <img
-            src={user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=admin"}
+            src={user?.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=admin"}
             alt="Avatar"
-            className="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5"
+            className="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5 object-cover"
             referrerPolicy="no-referrer"
           />
         </div>

@@ -23,6 +23,7 @@ import {
   ShieldCheck,
   Building2,
   Tag,
+  Award,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "../utils";
@@ -47,8 +48,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   const menuItems = [
     { icon: LayoutDashboard, label: t("dashboard"), path: "/" },
     { icon: Package, label: t("products"), path: "/products" },
+    { icon: Truck, label: t("vehicles"), path: "/vehicles" },
     { icon: FileText, label: t("blog"), path: "/blog" },
     { icon: Building2, label: t("clients"), path: "/clients" },
+    { icon: Award, label: t("certificates_licenses"), path: "/certificates" },
     { icon: ShieldCheck, label: t("partnerships"), path: "/partnerships" },
     { icon: Tag, label: t("offers"), path: "/offers" },
     { icon: HelpCircle, label: t("faq_manager"), path: "/faq" },

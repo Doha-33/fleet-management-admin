@@ -4,9 +4,11 @@ export interface User {
   nameEn: string;
   email: string;
   isAdmin: boolean;
+  isSubAdmin?: boolean;
   status: string;
   image: string;
   token?: string;
+  createdAt?: string;
 }
 
 export interface BlogPost {
@@ -126,6 +128,11 @@ export interface Product {
   seoDescription: string;
   seoDescriptionAr?: string;
   seoDescriptionEn?: string;
+  network?: "4G" | "2G";
+  sound?: "With Mike" | "Without Mike";
+  interference?: "Not jam-resistant" | "jam-resistant";
+  power?: "Supports electricity" | "No Supports electricity";
+  installation?: "No technician needed" | "technician needed";
   createdAt?: string;
   updatedAt?: string;
   created_at?: string;
@@ -137,6 +144,22 @@ export interface FAQ {
   questionEn: string;
   answerAr: string;
   answerEn: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Compound {
+  _id?: string;
+  compoundsAr: string;
+  compoundsEn: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CertificateOrLicense {
+  _id?: string;
+  name: string;
+  logo: string;
   createdAt?: string;
   updatedAt?: string;
 }

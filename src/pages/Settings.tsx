@@ -71,32 +71,6 @@ const Settings = () => {
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
-        <div className="card p-6">
-          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <Info size={20} className="text-primary" />
-            {t('about_us')}
-          </h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">{t('about_us')} (AR)</label>
-              <textarea
-                className="input-field h-32 rtl:text-right"
-                value={formData.aboutUsAr}
-                onChange={(e) => setFormData({ ...formData, aboutUsAr: e.target.value })}
-                placeholder={t('enter_about_us_ar')}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">{t('about_us')} (EN)</label>
-              <textarea
-                className="input-field h-32"
-                value={formData.aboutUsEn}
-                onChange={(e) => setFormData({ ...formData, aboutUsEn: e.target.value })}
-                placeholder={t('enter_about_us_en')}
-              />
-            </div>
-          </div>
-        </div>
 
         <div className="card p-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">

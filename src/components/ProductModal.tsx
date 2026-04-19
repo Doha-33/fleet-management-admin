@@ -84,6 +84,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
     seoDescription: '',
     seoDescriptionAr: '',
     seoDescriptionEn: '',
+    network: '4G',
+    sound: 'With Mike',
+    interference: 'Not jam-resistant',
+    power: 'Supports electricity',
+    installation: 'No technician needed',
   });
 
   const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
@@ -121,7 +126,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
         seoDescriptionEn: product.seoDescriptionEn || product.seoDescription || '',
         image: product.image || product.imageUrl || '',
         imageUrl: product.imageUrl || product.image || '',
-        channels: product.channels || ['online', 'store', 'meta', 'google', 'snapchat', 'tiktok']
+        channels: product.channels || ['online', 'store', 'meta', 'google', 'snapchat', 'tiktok'],
+        network: product.network || '4G',
+        sound: product.sound || 'With Mike',
+        interference: product.interference || 'Not jam-resistant',
+        power: product.power || 'Supports electricity',
+        installation: product.installation || 'No technician needed',
+        media: product.media || [],
       });
     } else {
       setFormData({
@@ -162,6 +173,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
         seoDescription: '',
         seoDescriptionAr: '',
         seoDescriptionEn: '',
+        network: '4G',
+        sound: 'With Mike',
+        interference: 'Not jam-resistant',
+        power: 'Supports electricity',
+        installation: 'No technician needed',
       });
     }
   }, [product, isOpen]);
@@ -204,6 +220,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
       seoTitle: isRtl ? formData.seoTitleAr || '' : formData.seoTitleEn || '',
       seoDescription: isRtl ? formData.seoDescriptionAr || '' : formData.seoDescriptionEn || '',
       imageUrl: formData.image || formData.imageUrl || '',
+      media: formData.media && formData.media.length > 0 ? formData.media : (formData.image || formData.imageUrl ? [formData.image || formData.imageUrl || ''] : []),
     };
 
     if (!submissionData.subCategory) delete submissionData.subCategory;
@@ -797,6 +814,73 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   />
                 </div>
               </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('network')}</label>
+                <select
+                  name="network"
+                  value={formData.network}
+                  onChange={handleChange}
+                  className="input-field"
+                >
+                  <option value="4G">{t('network_4g')}</option>
+                  <option value="2G">{t('network_2g')}</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('sound')}</label>
+                <select
+                  name="sound"
+                  value={formData.sound}
+                  onChange={handleChange}
+                  className="input-field"
+                >
+                  <option value="With Mike">{t('sound_with_mike')}</option>
+                  <option value="Without Mike">{t('sound_without_mike')}</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Additional Specs */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('interference')}</label>
+                <select
+                  name="interference"
+                  value={formData.interference}
+                  onChange={handleChange}
+                  className="input-field"
+                >
+                  <option value="Not jam-resistant">{t('interference_not_jam')}</option>
+                  <option value="jam-resistant">{t('interference_jam')}</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('power')}</label>
+                <select
+                  name="power"
+                  value={formData.power}
+                  onChange={handleChange}
+                  className="input-field"
+                >
+                  <option value="Supports electricity">{t('power_supports')}</option>
+                  <option value="No Supports electricity">{t('power_no_supports')}</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('installation')}</label>
+                <select
+                  name="installation"
+                  value={formData.installation}
+                  onChange={handleChange}
+                  className="input-field"
+                >
+                  <option value="No technician needed">{t('installation_no_tech')}</option>
+                  <option value="technician needed">{t('installation_tech')}</option>
+                </select>
+              </div>
+            </div>
+            {/* Quantity Settings */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-100 dark:border-slate-800">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('quantity_determination')}</label>
                 <select
