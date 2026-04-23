@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: (import.meta as any).env.PROD ? 'http://187.124.221.44:3000' : '/api',
+  baseURL: (import.meta as any).env.PROD ? 'https://fletobackend.onrender.com' : '/api',
   headers: {
     'Content-Type': 'application/json',
   },

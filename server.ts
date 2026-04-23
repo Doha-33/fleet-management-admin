@@ -13,7 +13,7 @@ async function startServer() {
 
   // Proxy API requests to avoid CORS
   app.use('/api', createProxyMiddleware({
-    target: 'http://187.124.221.44:3000/api',
+    target: 'https://fletobackend.onrender.com/api',
     changeOrigin: true,
     secure: false,
     pathRewrite: {

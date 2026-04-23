@@ -90,7 +90,7 @@ const Login: React.FC = () => {
 
         <div className="mt-8 text-center">
           <p className="text-xs text-slate-500">
-            © 2024 FleetTrack Technology. All rights reserved.
+            © 2026 FleetTrack Technology. All rights reserved.
           </p>
         </div>
       </motion.div>
