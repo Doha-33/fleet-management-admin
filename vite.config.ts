@@ -18,7 +18,7 @@ export default defineConfig(({mode}) => {
     server: {
       proxy: {
         '/api': {
-          target: 'https://fletobackend.onrender.com',
+          target: 'https://asnacompany.com',
           changeOrigin: true,
           secure: false,
         },
