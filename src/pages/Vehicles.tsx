@@ -25,7 +25,7 @@ const Vehicles = () => {
   const fetchVehicles = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/pricing');
+      const response = await api.get('/pricing');
       setVehicles(response.data);
     } catch (error) {
       console.error('Failed to fetch vehicles:', error);
@@ -47,11 +47,11 @@ const Vehicles = () => {
 
     try {
       if (editingVehicle) {
-        const response = await api.put(`/api/pricing/${editingVehicle._id}`, formData);
+        const response = await api.put(`/pricing/${editingVehicle._id}`, formData);
         setVehicles(prev => prev.map(v => v._id === editingVehicle._id ? response.data : v));
         toast.success(t('updated_successfully'));
       } else {
-        const response = await api.post('/api/pricing', formData);
+        const response = await api.post('/pricing', formData);
         setVehicles(prev => [response.data, ...prev]);
         toast.success(t('added_successfully'));
       }
@@ -67,7 +67,7 @@ const Vehicles = () => {
   const handleDelete = async () => {
     if (!deleteModal.id) return;
     try {
-      await api.delete(`/api/pricing/${deleteModal.id}`);
+      await api.delete(`/pricing/${deleteModal.id}`);
       setVehicles(prev => prev.filter(v => v._id !== deleteModal.id));
       toast.success(t('deleted_successfully'));
       setDeleteModal({ isOpen: false, id: null });

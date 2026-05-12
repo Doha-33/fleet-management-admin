@@ -43,11 +43,11 @@ const Dashboard: React.FC = () => {
     const fetchDashboardData = async () => {
       try {
         const [productsRes, postsRes, clientsRes, pricingRes, certsRes] = await Promise.all([
-          api.get('/api/products'),
-          api.get('/api/posts'),
-          api.get('/api/clients'),
-          api.get('/api/pricing'),
-          api.get('/api/certificateOrLicense'),
+          api.get('/products'),
+          api.get('/posts'),
+          api.get('/clients'),
+          api.get('/pricing'),
+          api.get('/certificateOrLicense'),
         ]);
 
         setStats([

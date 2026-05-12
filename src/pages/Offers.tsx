@@ -29,7 +29,7 @@ const Offers = () => {
   const fetchOffers = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/offers');
+      const response = await api.get('/offers');
       setOffers(response.data);
     } catch (error) {
       console.error('Failed to fetch offers:', error);
@@ -51,10 +51,10 @@ const Offers = () => {
 
     try {
       if (editingOffer) {
-        await api.put(`/api/offers/${editingOffer._id}`, formData);
+        await api.put(`/offers/${editingOffer._id}`, formData);
         toast.success(t('updated_successfully'));
       } else {
-        await api.post('/api/offers', formData);
+        await api.post('/offers', formData);
         toast.success(t('added_successfully'));
       }
       fetchOffers();
@@ -84,7 +84,7 @@ const Offers = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await api.delete(`/api/offers/${id}`);
+      await api.delete(`/offers/${id}`);
       setDeleteModal({ isOpen: false, id: null });
       toast.success(t('deleted_successfully'));
       fetchOffers();

@@ -21,7 +21,7 @@ const Settings = () => {
   const fetchSettings = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/settings');
+      const response = await api.get('/settings');
       if (response.data && response.data.length > 0) {
         setFormData(response.data[0]);
       }
@@ -41,9 +41,9 @@ const Settings = () => {
     e.preventDefault();
     try {
       if (formData._id) {
-        await api.put(`/api/settings/${formData._id}`, formData);
+        await api.put(`/settings/${formData._id}`, formData);
       } else {
-        await api.post('/api/settings', formData);
+        await api.post('/settings', formData);
       }
       toast.success(t('settings_updated_successfully'));
       fetchSettings();

@@ -35,7 +35,7 @@ const Blog: React.FC = () => {
   const fetchPosts = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/posts');
+      const response = await api.get('/posts');
       setPosts(response.data);
     } catch (error) {
       console.error('Failed to fetch posts:', error);
@@ -88,7 +88,7 @@ const Blog: React.FC = () => {
   const handleConfirmDelete = async () => {
     if (postToDelete) {
       try {
-        await api.delete(`/api/posts/${postToDelete._id}`);
+        await api.delete(`/posts/${postToDelete._id}`);
         toast.success(t('post_deleted_successfully'));
         fetchPosts();
         setIsDeleteModalOpen(false);
@@ -113,10 +113,10 @@ const Blog: React.FC = () => {
       };
 
       if (editingPost) {
-        await api.put(`/api/posts/${editingPost._id}`, payload);
+        await api.put(`/posts/${editingPost._id}`, payload);
         toast.success(t('post_updated_successfully'));
       } else {
-        await api.post('/api/posts', payload);
+        await api.post('/posts', payload);
         toast.success(t('post_created_successfully'));
       }
       fetchPosts();

@@ -30,7 +30,7 @@ const Partnerships = () => {
   const fetchPartnerships = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/portfolio');
+      const response = await api.get('/portfolio');
       setPartnerships(response.data);
     } catch (error) {
       console.error('Failed to fetch partnerships:', error);
@@ -52,10 +52,10 @@ const Partnerships = () => {
 
     try {
       if (editingPartnership) {
-        await api.put(`/api/portfolio/${editingPartnership._id}`, formData);
+        await api.put(`/portfolio/${editingPartnership._id}`, formData);
         toast.success(t('updated_successfully'));
       } else {
-        await api.post('/api/portfolio', formData);
+        await api.post('/portfolio', formData);
         toast.success(t('added_successfully'));
       }
       fetchPartnerships();
@@ -86,7 +86,7 @@ const Partnerships = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await api.delete(`/api/portfolio/${id}`);
+      await api.delete(`/portfolio/${id}`);
       setDeleteModal({ isOpen: false, id: null });
       toast.success(t('deleted_successfully'));
       fetchPartnerships();

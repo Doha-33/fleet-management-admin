@@ -34,10 +34,10 @@ const Products: React.FC = () => {
     setLoading(true);
     try {
       const [productsRes, mainCatsRes, subCatsRes, nestedCatsRes] = await Promise.all([
-        api.get('/api/products'),
-        api.get('/api/mainCategories'),
-        api.get('/api/subCategories'),
-        api.get('/api/nestedCategories')
+        api.get('/products'),
+        api.get('/mainCategories'),
+        api.get('/subCategories'),
+        api.get('/nestedCategories')
       ]);
       setProducts(productsRes.data);
       setCategories(mainCatsRes.data);
@@ -91,7 +91,7 @@ const Products: React.FC = () => {
 
   const handleAddCategory = async (nameAr: string, nameEn: string) => {
     try {
-      const response = await api.post('/api/mainCategories', { nameAr, nameEn });
+      const response = await api.post('/mainCategories', { nameAr, nameEn });
       setCategories(prev => [...prev, response.data]);
       toast.success(t('category_added_successfully'));
       return response.data;
@@ -103,7 +103,7 @@ const Products: React.FC = () => {
 
   const handleEditCategory = async (id: string, nameAr: string, nameEn: string) => {
     try {
-      const response = await api.put(`/api/mainCategories/${id}`, { nameAr, nameEn });
+      const response = await api.put(`/mainCategories/${id}`, { nameAr, nameEn });
       setCategories(prev => prev.map(cat => cat._id === id ? response.data : cat));
       toast.success(t('category_updated_successfully'));
     } catch (error) {
@@ -114,7 +114,7 @@ const Products: React.FC = () => {
 
   const handleDeleteCategory = async (id: string) => {
     try {
-      await api.delete(`/api/mainCategories/${id}`);
+      await api.delete(`/mainCategories/${id}`);
       setCategories(prev => prev.filter(cat => cat._id !== id));
       setAllSubcategories(prev => prev.filter(sub => sub.fatherId !== id));
       toast.success(t('category_deleted_successfully'));
@@ -126,7 +126,7 @@ const Products: React.FC = () => {
 
   const handleAddSubcategory = async (nameAr: string, nameEn: string, fatherId: string) => {
     try {
-      const response = await api.post('/api/subCategories', { nameAr, nameEn, fatherId });
+      const response = await api.post('/subCategories', { nameAr, nameEn, fatherId });
       setAllSubcategories(prev => [...prev, response.data]);
       toast.success(t('subcategory_added_successfully'));
       return response.data;
@@ -138,7 +138,7 @@ const Products: React.FC = () => {
 
   const handleEditSubcategory = async (id: string, nameAr: string, nameEn: string) => {
     try {
-      const response = await api.put(`/api/subCategories/${id}`, { nameAr, nameEn });
+      const response = await api.put(`/subCategories/${id}`, { nameAr, nameEn });
       setAllSubcategories(prev => prev.map(sub => sub._id === id ? response.data : sub));
       toast.success(t('subcategory_updated_successfully'));
     } catch (error) {
@@ -149,7 +149,7 @@ const Products: React.FC = () => {
 
   const handleDeleteSubcategory = async (id: string) => {
     try {
-      await api.delete(`/api/subCategories/${id}`);
+      await api.delete(`/subCategories/${id}`);
       setAllSubcategories(prev => prev.filter(sub => sub._id !== id));
       setAllNestedCategories(prev => prev.filter(nested => nested.subCategoryId !== id));
       toast.success(t('subcategory_deleted_successfully'));
@@ -161,7 +161,7 @@ const Products: React.FC = () => {
 
   const handleAddChildSub = async (nameAr: string, nameEn: string, subCategoryId: string) => {
     try {
-      const response = await api.post('/api/nestedCategories', { nameAr, nameEn, subCategoryId });
+      const response = await api.post('/nestedCategories', { nameAr, nameEn, subCategoryId });
       setAllNestedCategories(prev => [...prev, response.data]);
       toast.success(t('child_subcategory_added_successfully'));
       return response.data;
@@ -173,7 +173,7 @@ const Products: React.FC = () => {
 
   const handleEditChildSub = async (id: string, nameAr: string, nameEn: string) => {
     try {
-      const response = await api.put(`/api/nestedCategories/${id}`, { nameAr, nameEn });
+      const response = await api.put(`/nestedCategories/${id}`, { nameAr, nameEn });
       setAllNestedCategories(prev => prev.map(nested => nested._id === id ? response.data : nested));
       toast.success(t('child_subcategory_updated_successfully'));
     } catch (error) {
@@ -184,7 +184,7 @@ const Products: React.FC = () => {
 
   const handleDeleteChildSub = async (id: string) => {
     try {
-      await api.delete(`/api/nestedCategories/${id}`);
+      await api.delete(`/nestedCategories/${id}`);
       setAllNestedCategories(prev => prev.filter(nested => nested._id !== id));
       toast.success(t('child_subcategory_deleted_successfully'));
     } catch (error) {
@@ -196,11 +196,11 @@ const Products: React.FC = () => {
   const handleSave = async (productData: Product) => {
     try {
       if (productData._id) {
-        const response = await api.put(`/api/products/${productData._id}`, productData);
+        const response = await api.put(`/products/${productData._id}`, productData);
         setProducts(prev => prev.map(p => p._id === productData._id ? response.data : p));
         toast.success(t('product_updated_successfully'));
       } else {
-        const response = await api.post('/api/products', productData);
+        const response = await api.post('/products', productData);
         setProducts(prev => [response.data, ...prev]);
         toast.success(t('product_added_successfully'));
       }
@@ -214,7 +214,7 @@ const Products: React.FC = () => {
   const confirmDelete = async () => {
     if (productToDelete !== null) {
       try {
-        await api.delete(`/api/products/${productToDelete}`);
+        await api.delete(`/products/${productToDelete}`);
         setProducts(prev => prev.filter(p => p._id !== productToDelete));
         toast.success(t('product_deleted_successfully'));
         setProductToDelete(null);

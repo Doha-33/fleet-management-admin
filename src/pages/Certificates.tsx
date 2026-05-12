@@ -25,7 +25,7 @@ const Certificates = () => {
   const fetchCertificates = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/certificateOrLicense');
+      const response = await api.get('/certificateOrLicense');
       setCertificates(response.data);
     } catch (error) {
       console.error('Failed to fetch certificates:', error);
@@ -48,11 +48,11 @@ const Certificates = () => {
     setIsSaving(true);
     try {
       if (editingCertificate) {
-        const response = await api.put(`/api/certificateOrLicense/${editingCertificate._id}`, formData);
+        const response = await api.put(`/certificateOrLicense/${editingCertificate._id}`, formData);
         setCertificates(prev => prev.map(c => c._id === editingCertificate._id ? response.data : c));
         toast.success(t('updated_successfully'));
       } else {
-        const response = await api.post('/api/certificateOrLicense', formData);
+        const response = await api.post('/certificateOrLicense', formData);
         setCertificates(prev => [response.data, ...prev]);
         toast.success(t('added_successfully'));
       }
@@ -80,7 +80,7 @@ const Certificates = () => {
   const handleDelete = async () => {
     if (!deleteModal.id) return;
     try {
-      await api.delete(`/api/certificateOrLicense/${deleteModal.id}`);
+      await api.delete(`/certificateOrLicense/${deleteModal.id}`);
       setCertificates(prev => prev.filter(c => c._id !== deleteModal.id));
       toast.success(t('deleted_successfully'));
       setDeleteModal({ isOpen: false, id: null });

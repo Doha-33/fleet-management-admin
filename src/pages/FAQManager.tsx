@@ -34,7 +34,7 @@ const FAQManager = () => {
   const fetchFaqs = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/api/fqa');
+      const response = await api.get('/fqa');
       setFaqs(response.data);
     } catch (error) {
       console.error('Failed to fetch FAQs:', error);
@@ -48,11 +48,11 @@ const FAQManager = () => {
     if (formData.questionAr && formData.questionEn && formData.answerAr && formData.answerEn) {
       try {
         if (editingFaq && editingFaq._id) {
-          const response = await api.put(`/api/fqa/${editingFaq._id}`, formData);
+          const response = await api.put(`/fqa/${editingFaq._id}`, formData);
           setFaqs(faqs.map((f) => (f._id === editingFaq._id ? response.data : f)));
           toast.success(t('faq_updated_successfully'));
         } else {
-          const response = await api.post('/api/fqa', formData);
+          const response = await api.post('/fqa', formData);
           setFaqs([...faqs, response.data]);
           toast.success(t('faq_added_successfully'));
         }
@@ -79,7 +79,7 @@ const FAQManager = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await api.delete(`/api/fqa/${id}`);
+      await api.delete(`/fqa/${id}`);
       setFaqs(faqs.filter((f) => f._id !== id));
       toast.success(t('faq_deleted_successfully'));
       setDeleteModal({ isOpen: false, id: null });

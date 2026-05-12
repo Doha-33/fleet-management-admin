@@ -24,7 +24,7 @@ const Clients = () => {
   const fetchClients = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/clients');
+      const response = await api.get('/clients');
       setClients(response.data);
     } catch (error) {
       console.error('Failed to fetch clients:', error);
@@ -46,10 +46,10 @@ const Clients = () => {
 
     try {
       if (editingClient) {
-        await api.put(`/api/clients/${editingClient._id}`, formData);
+        await api.put(`/clients/${editingClient._id}`, formData);
         toast.success(t('updated_successfully'));
       } else {
-        await api.post('/api/clients', formData);
+        await api.post('/clients', formData);
         toast.success(t('added_successfully'));
       }
       fetchClients();
@@ -74,7 +74,7 @@ const Clients = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await api.delete(`/api/clients/${id}`);
+      await api.delete(`/clients/${id}`);
       setDeleteModal({ isOpen: false, id: null });
       toast.success(t('deleted_successfully'));
       fetchClients();

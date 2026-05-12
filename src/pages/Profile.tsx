@@ -25,7 +25,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await api.get('/api/users/me');
+        const response = await api.get('/users/me');
         setUser(response.data);
         setFormData({
           nameAr: response.data.nameAr || '',
@@ -49,7 +49,7 @@ const Profile: React.FC = () => {
     if (!user?._id) return;
     setIsSaving(true);
     try {
-      const response = await api.put(`/api/users/${user._id}`, formData);
+      const response = await api.put(`/users/${user._id}`, formData);
       setUser(response.data);
       updateUser(response.data);
       toast.success(t('profile_updated_successfully'));
