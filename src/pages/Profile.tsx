@@ -21,6 +21,8 @@ const Profile: React.FC = () => {
     status: '',
     image: '',
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -34,6 +36,7 @@ const Profile: React.FC = () => {
           status: response.data.status || '',
           image: response.data.image || '',
         });
+        setImagePreview(response.data.image || '');
       } catch (error) {
         console.error('Failed to fetch user:', error);
         toast.error(t('failed_to_fetch_profile'));
@@ -49,9 +52,25 @@ const Profile: React.FC = () => {
     if (!user?._id) return;
     setIsSaving(true);
     try {
-      const response = await api.put(`/users/${user._id}`, formData);
+      const formDataToSend = new FormData();
+      formDataToSend.append('nameAr', formData.nameAr);
+      formDataToSend.append('nameEn', formData.nameEn);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('status', formData.status);
+      
+      if (imageFile) {
+        formDataToSend.append('image', imageFile);
+      }
+
+      const response = await api.put(`/users/${user._id}`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
       setUser(response.data);
       updateUser(response.data);
+      setImageFile(null);
       toast.success(t('profile_updated_successfully'));
     } catch (error) {
       console.error('Failed to update profile:', error);
@@ -64,9 +83,10 @@ const Profile: React.FC = () => {
   const handleUploadAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, image: reader.result as string }));
+        setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -92,7 +112,7 @@ const Profile: React.FC = () => {
           <div className="card p-6 text-center">
             <div className="relative inline-block mb-4">
               <img
-                src={formData.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=admin"}
+                src={imagePreview || formData.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=admin"}
                 alt="Avatar"
                 className="w-32 h-32 rounded-full border-4 border-primary/10 p-1 object-cover"
                 referrerPolicy="no-referrer"

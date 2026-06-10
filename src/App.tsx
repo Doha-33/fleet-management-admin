@@ -36,7 +36,7 @@ export default function App() {
       <ThemeProvider>
         <AuthProvider>
           <Toaster position="top-right" richColors />
-          <BrowserRouter basename="/dashboard">
+          <BrowserRouter>
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<DashboardLayout />}>
